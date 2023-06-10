@@ -1,30 +1,26 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import morgan from "morgan";
-
-// Connect to db
-import "./db/sequelize.js";
-
-// routes
-import userRoute from "./routes/userRoute.js";
-import postRoute from "./routes/postRoute.js";
-import commentRoute from "./routes/commentRoute.js";
-
+import "./config/Database.js"
+import userRoute from './controller/user-route.js'
+import postRoute from './controller/post-route.js'
+import commentRoute from './controller/comment-route.js'
+import errorHandler from './middleware/errorHandler.js';
 const app = express();
+
 
 // middleware
 app.use(cors());
-app.use(morgan("tiny"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('tiny'));
 
-// parse application/x-www-foimport rm-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
-app.use(bodyParser.json());
 
 // routes
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/comments", commentRoute);
+app.use(errorHandler);
+
 
 export default app;
